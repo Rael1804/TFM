@@ -14,10 +14,23 @@ public class ChooseRoom : MonoBehaviour
     public Material laundryMat;
     public Material combatRoomMat;
     public Material gymMat;
-    public Material mirrorRoomMat;
     public Material armoryMat;
     public Material pharmacyMat;
     public Material greenHouseMat;
+
+
+    [Header("Decoraciones")]
+    public GameObject kitchenGO;
+    public GameObject livingRoomGO;
+    public GameObject bathroomGO;
+    public GameObject libraryGO;
+    public GameObject storageGO;
+    public GameObject laundryGO;
+    public GameObject combatRoomGO;
+    public GameObject gymGO;
+    public GameObject armoryGO;
+    public GameObject pharmacyGO;
+    public GameObject greenHouseGO;
 
     private bool executed = false;
     private const int ROOMS_TO_IGNORE = 12;
@@ -30,6 +43,22 @@ public class ChooseRoom : MonoBehaviour
             AssignRooms();
         }
     }
+
+    void SpawnDecoration(GameObject room, RoomType type)
+    {
+        GameObject prefab = GetDecoration(type);
+        if (prefab == null) return;
+
+        // Evitar duplicados
+        if (room.transform.Find("Decoration") != null)
+            return;
+
+        GameObject deco = Instantiate(prefab, room.transform);
+        deco.name = "Decoration";
+        deco.transform.localPosition = Vector3.zero;
+        deco.transform.localRotation = Quaternion.identity;
+    }
+
 
     void AssignRooms()
     {
@@ -64,7 +93,6 @@ public class ChooseRoom : MonoBehaviour
             RoomType.Laundry,
             RoomType.CombatRoom,
             RoomType.Gym,
-            RoomType.MirrorRoom,
             RoomType.Armory,
             RoomType.Pharmacy,
             RoomType.GreenHouse
@@ -122,10 +150,13 @@ public class ChooseRoom : MonoBehaviour
         }
 
         r.roomType = type;
+
         ApplyMaterial(room, type);
+        SpawnDecoration(room, type);
 
         Debug.Log($"✔ {room.name} -> {type}");
     }
+
 
 
     void ApplyMaterial(GameObject room, RoomType type)
@@ -158,7 +189,6 @@ public class ChooseRoom : MonoBehaviour
             case RoomType.Laundry: return laundryMat;
             case RoomType.CombatRoom: return combatRoomMat;
             case RoomType.Gym: return gymMat;
-            case RoomType.MirrorRoom: return mirrorRoomMat;
             case RoomType.Armory: return armoryMat;
             case RoomType.Pharmacy: return pharmacyMat;
             case RoomType.GreenHouse: return greenHouseMat;
@@ -180,4 +210,24 @@ public class ChooseRoom : MonoBehaviour
             (list[i], list[rnd]) = (list[rnd], list[i]);
         }
     }
+
+    GameObject GetDecoration(RoomType type)
+    {
+        switch (type)
+        {
+            case RoomType.Kitchen: return kitchenGO;
+            case RoomType.LivingRoom: return livingRoomGO;
+            case RoomType.Bathroom: return bathroomGO;
+            case RoomType.Library: return libraryGO;
+            case RoomType.Storage: return storageGO;
+            case RoomType.Laundry: return laundryGO;
+            case RoomType.CombatRoom: return combatRoomGO;
+            case RoomType.Gym: return gymGO;
+            case RoomType.Armory: return armoryGO;
+            case RoomType.Pharmacy: return pharmacyGO;
+            case RoomType.GreenHouse: return greenHouseGO;
+        }
+        return null;
+    }
+
 }
